@@ -11,7 +11,8 @@ export const openaiClient = createOpenAI({
 /**
  * Returns a typed language model instance by id.
  */
-export const getLanguageModel = (modelId = "gpt-4o"): LanguageModel => openaiClient(modelId);
+const modelId = process.env.OPENAI_MODEL_ID || "gpt-4o";
+export const getLanguageModel = (): LanguageModel => openaiClient(modelId);
 
 
 
