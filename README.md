@@ -1,36 +1,68 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Workout Plan Builder
 
-## Getting Started
+Full-stack AI assistant that collects a natural-language workout brief, generates a multi-week strength program with OpenAI, and renders it in a responsive dashboard with editable circuits.
 
-First, run the development server:
+## Stack
+- Next.js 16 (App Router) + TypeScript
+- Tailwind CSS + shadcn-inspired primitives
+- OpenAI Chat Completions (Responses API) invoked from a Next.js route
+- Zod for schema validation
+- Axios for client ↔ API communication
+
+## Prerequisites
+- Node.js 18+
+- npm 10+
+- An OpenAI API key with access to `gpt-4o-mini` (or compatible) models
+
+## Environment Variables
+Copy `env.example` to `.env.local` (or `.env`) and provide your key:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+```
+OPENAI_API_KEY=sk-your-key
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Local Development
+```bash
+npm install
+npm run dev
+```
+Visit `http://localhost:3000`.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### Testing the Flow
+1. Open the prompt screen (`/`), describe the desired program, and click the arrow button.
+2. The client posts to `/api/generate-plan`; the server calls OpenAI and validates the result with Zod.
+3. On success, the plan is cached in `localStorage` and you’re redirected to `/workout-plan`.
+4. Inspect the generated plan, switch weeks via tabs, and reorder or delete exercises per day—the state persists locally, so refresh to confirm.
 
-## Learn More
+If `OPENAI_API_KEY` is missing or an upstream error occurs, the API responds with a descriptive 500 error.
 
-To learn more about Next.js, take a look at the following resources:
+## Deployment
+1. Create the environment on your hosting provider (Vercel recommended).
+2. Set `OPENAI_API_KEY` in the project settings.
+3. Run `npm run build` locally to verify a production bundle.
+4. Deploy (`vercel`, `npm run deploy`, or git-based deployment).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Project Structure
+```
+src/
+  app/
+    page.tsx                 # Prompt view (client component)
+    workout-plan/page.tsx    # Plan dashboard + tabs
+    api/generate-plan/route  # OpenAI proxy route
+components/
+  ui/                        # shadcn-style primitives
+  workout/                   # Domain-specific plan components
+constants/ai.ts              # Shared AI prompt text
+hooks/useWorkoutPlan.ts      # LocalStorage + mutation logic
+lib/axios.ts                 # Preconfigured Axios instance
+types/workout.ts             # Shared Zod schema + TS types
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Future Enhancements
+- Persist plans in a database instead of `localStorage`.
+- Add authentication so users can revisit historical plans.
+- Improve drag-and-drop interactions with a dedicated DnD provider.
