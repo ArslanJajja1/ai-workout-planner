@@ -1,5 +1,5 @@
 import type { FormEvent } from "react";
-import { SendHorizontal } from "lucide-react";
+import { Loader2, SendHorizontal } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -50,7 +50,7 @@ export function PromptFormCard({
             aria-label="Generate plan"
             className="flex h-12 w-12 items-center justify-center rounded-full bg-[#6367EF] text-white transition hover:bg-[#5458d6] disabled:cursor-not-allowed disabled:bg-[#E9EFFF] disabled:text-gray-400"
           >
-            {isBusy ? <span className="text-sm font-semibold">•••</span> : <SendHorizontal className="h-5 w-5" aria-hidden="true" />}
+            {isBusy ? <Loader2 className="h-5 w-5 animate-spin" aria-hidden="true" /> : <SendHorizontal className="h-5 w-5" aria-hidden="true" />}
           </Button>
         </div>
       </div>
