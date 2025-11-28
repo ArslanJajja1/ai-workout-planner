@@ -8,13 +8,12 @@ import {
   PLAN_SCHEMA_DESCRIPTION,
   buildPlanUserPrompt,
 } from "@/constants/plan-generation";
-import { GENERATE_PLAN_MAX_DURATION } from "@/constants/runtime";
 import { jsonError, readJsonBody } from "@/lib/api-utils";
 import { getLanguageModel } from "@/lib/ai-client";
 import { GeneratePlanRequestSchema, type GeneratePlanResponse } from "@/types/api";
 import { WorkoutPlanSchema } from "@/types/workout";
 
-export const maxDuration = GENERATE_PLAN_MAX_DURATION;
+export const maxDuration = 120;
 
 /**
  * Generates a structured workout plan using the Vercel AI SDK.
